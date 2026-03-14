@@ -1,13 +1,37 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
+#include <ctype.h>
 typedef struct{
     const char* mnemonic;
     int opcode;
     int operand;
 }Instruction;
 
+
+void trim_whitespace(char *str) {
+    char *end;
+    char *start = str;
+
+    while (isspace((unsigned char)*start)) {
+        start++;
+    }
+
+   
+    if (start != str) {
+        memmove(str, start, strlen(start) + 1);
+    }
+
+    if (*str == '\0') {
+        return;
+    }
+
+    end = str + strlen(str) - 1;
+    while (end > str && isspace((unsigned char)*end)) {
+        end--;
+    }
+    *(end + 1) = '\0';
+}
 Instruction InstructionTable[]={  {"data", -1, 1},  
     {"ldc", 0, 1},    
     {"adc", 1, 1},    
@@ -60,9 +84,15 @@ int main(int argc,char* argv[])
     int i;
     int label_found;
     char* endptr;
-
+ 
+    int k;
+    int is_dup;
+    char* extra;
     char obj_filename[256];
     char lst_filename[256];
+
+    char *colon_ptr;
+    char *attached_inst;
 
     if(argc<2)
     {
@@ -87,17 +117,47 @@ int main(int argc,char* argv[])
        {
           continue;
        }
-       if(token[strlen(token)-1]==':')
+       colon_ptr = strchr(token, ':');
+
+      if(colon_ptr != NULL)
        {
-        token[strlen(token)-1]='\0';
-        if(symbol_count<MAX_LABELS)
+        *colon_ptr = '\0'; /* Cut the string at the colon */
+        trim_whitespace(token);
+        attached_inst = colon_ptr + 1;
+
+        if (!isalpha(token[0])) 
+        {
+            printf("ERROR at PC %04X: Invalid label name '%s' (must start with a letter)\n", pc, token);
+        }
+        else
+        {
+            is_dup = 0;
+                for (k = 0; k < symbol_count; k++) {
+                    if (strcmp(symbol_table[k].name, token) == 0) {
+                        printf("ERROR at PC %04X: Duplicate label definition '%s'\n", pc, token);
+                        is_dup = 1;
+                        break;
+        }
+    }
+    
+        if(!is_dup && symbol_count<MAX_LABELS)
         {
             strcpy(symbol_table[symbol_count].name,token);
             symbol_table[symbol_count].address=pc;
             symbol_count++;
         }
-        token = strtok(NULL, " \t\r\n");
        }
+
+       if (*attached_inst != '\0') {
+            token = attached_inst;
+        } else {
+            /* Otherwise, just grab the next word separated by a space */
+            token = strtok(NULL, " \t\r\n");
+        }
+        
+        if(token == NULL) continue;
+    }
+    
        if(token!=NULL)
        {
         found=0;
@@ -155,28 +215,34 @@ int main(int argc,char* argv[])
         rewind(infile);
         pc=0;
         printf("Starting pass 2....\n");
-        printf("DEBUG 2: Files opened successfully\n");
         while(fgets(line,sizeof(line),infile)!=NULL)
         {
-            printf("DEBUG 3: Read line: %s\n", line);
             comment_ptr=strchr(line,';');
             if(comment_ptr!=NULL)
             {
                 *comment_ptr='\0';
             }
             token=strtok(line," \t\r\n");
-            printf("DEBUG 4: Token is %s\n", token);
             if(token==NULL)
             {
                 continue;
             }
-            
-            if(token[strlen(token)-1]==':')
+            colon_ptr = strchr(token, ':');
+            if(colon_ptr != NULL)
             {
-                 token=strtok(NULL," \t\r\n");
+                 *colon_ptr = '\0'; /* Cut the string at the colon */
+                 trim_whitespace(token);
+                 attached_inst = colon_ptr + 1; /* Point to whatever comes immediately after */
+                 
+                 if (*attached_inst != '\0') {
+                     token = attached_inst;
+                 } else {
+                     token = strtok(NULL," \t\r\n");
+                 }
+                 
                  if(token==NULL)
                  {
-                 continue;
+                     continue;
                  }
             }
 
@@ -192,13 +258,20 @@ int main(int argc,char* argv[])
                         operand_str=strtok(NULL," \t\r\n");
                         if(operand_str==NULL)
                         {
-                            printf("ERROR at PC %d: Missing operand for %s\n",pc,token);
+                            printf("ERROR at PC %04X: Missing operand for %s\n",pc,token);
+                            pc++;
                             break;
                         }
                        operand_val=strtol(operand_str,&endptr,0);
                        
                        if(*endptr!='\0' && *endptr!=';')
                        {
+                        if (isdigit(operand_str[0]) || (operand_str[0] == '-' && isdigit(operand_str[1]))) {
+                                printf("ERROR at PC %04X: Invalid number format '%s'\n", pc, operand_str);
+                                operand_val = 0;
+                        }
+                        else
+                        {
                         label_found=0;
                         for(i=0;i<symbol_count;i++)
                         {
@@ -223,6 +296,20 @@ int main(int argc,char* argv[])
                         }
                        }
                     }
+                    extra = strtok(NULL, " \t\r\n");
+                        if (extra != NULL && extra[0] != ';') {
+                            printf("ERROR at PC %04X: Extra text '%s' at end of line\n", pc, extra);
+                        }
+                        
+                    }
+                    else 
+                    {
+                        /* ERROR CHECK: Unexpected operand (Instruction doesn't take one) */
+                        extra = strtok(NULL, " \t\r\n");
+                        if (extra != NULL && extra[0] != ';') {
+                            printf("ERROR at PC %04X: Unexpected operand '%s' for %s\n", pc, extra, token);
+                        }
+                    }
                     if(InstructionTable[j].opcode==-2)
                     {
                         continue;
@@ -236,7 +323,7 @@ int main(int argc,char* argv[])
                     {
                         machine_code=((operand_val<<8) & 0xFFFFFF00)|(InstructionTable[j].opcode & 0xFF);
                     }
-                     printf("DEBUG 5: About to write to file\n");
+        
                     fwrite(&machine_code,sizeof(int),1,objfile);
                     if (InstructionTable[j].operand)
                     {
@@ -254,7 +341,7 @@ int main(int argc,char* argv[])
             }
             if(!found)
             {
-                printf("ERROR at PC %d: Unknown instruction '%s'\n", pc, token);
+                printf("ERROR at PC %04X: Unknown instruction '%s'\n", pc, token);
             }
         }
     fclose(infile);
