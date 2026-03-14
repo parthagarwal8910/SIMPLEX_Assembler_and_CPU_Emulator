@@ -1,5 +1,6 @@
 #include<stdio.h>
 #include<stdlib.h>
+#include<string.h>
 #define MEMORY_SIZE 8192
 int memory[MEMORY_SIZE];
 int main(int argc,char* argv[])
@@ -19,6 +20,8 @@ int main(int argc,char* argv[])
     int words_read;
     int i;
 
+    char dump_filename[256];
+    char *dot;
     if(argc<2)
     {
         printf("Usage: %s <filename.obj>\n", argv[0]);
@@ -150,21 +153,31 @@ int main(int argc,char* argv[])
     printf("PC: %08X (%d)\n", PC, PC);
     printf("SP: %08X (%d)\n", SP, SP);
 
-    printf("\n--- Triangle Results ---\n");
     
     /* --- 5. Complete Memory Dump to File --- */
-    printf("Writing complete memory dump to 'memory_dump.txt'...\n");
+    strncpy(dump_filename, argv[1], sizeof(dump_filename) - 1);
+    dump_filename[sizeof(dump_filename) - 1] = '\0';
     
-    dumpfile = fopen("memory_dump.txt", "w");
+    /* Find the last dot in the filename to replace the extension */
+    dot = strrchr(dump_filename, '.');
+    if (dot != NULL) {
+        /* Change this to ".lst" if you want to overwrite the assembler's file! */
+        strcpy(dot, "_dump.lst"); 
+    } else {
+        strcat(dump_filename, "_dump.lst");
+    }
+
+    printf("Writing complete memory dump to '%s'...\n", dump_filename);
+    
+    dumpfile = fopen(dump_filename, "w");
     if (dumpfile == NULL) {
-        printf("Error: Could not create memory_dump.txt\n");
+        printf("Error: Could not create %s\n", dump_filename);
     } else {
         fprintf(dumpfile, "--- SIMPLEX EMULATOR MEMORY DUMP ---\n");
         fprintf(dumpfile, "Address    Hex Value  (Decimal)\n");
         fprintf(dumpfile, "-----------------------------------\n");
         
         for (i = 0; i < MEMORY_SIZE; i++) {
-            /* We print the address, the raw hex, and the readable decimal */
             fprintf(dumpfile, "[%04X]    %08X   (%d)\n", i, memory[i], memory[i]);
         }
         

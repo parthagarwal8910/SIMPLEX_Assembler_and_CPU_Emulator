@@ -1,0 +1,22 @@
+Starting Pass 1...
+Pass 1 complete. Found 7 labels.
+Label: main       -> Address: 10
+Label: loop       -> Address: 15
+Label: triangle   -> Address: 36
+Label: skip       -> Address: 48
+Label: one        -> Address: 70
+Label: count      -> Address: 74
+Label: result     -> Address: 75
+Starting pass 2....
+Assembly complete. Generated triangle.obj and triangle.lst
+Successfully loaded 76 instruction words into memory.
+Starting execution...
+
+--- Execution Halted ---
+Final CPU State:
+A:  00000000 (0)
+B:  00000000 (0)
+PC: 0000000A (10)
+SP: 00001000 (4096)
+Writing complete memory dump to 'triangle_dump.lst'...
+Memory dump saved successfully!

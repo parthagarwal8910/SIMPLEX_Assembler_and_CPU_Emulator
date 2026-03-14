@@ -1,0 +1,28 @@
+Starting Pass 1...
+Pass 1 complete. Found 13 labels.
+Label: init       -> Address: 0
+Label: sort_start -> Address: 5
+Label: inner_loop -> Address: 16
+Label: no_swap    -> Address: 46
+Label: end_inner  -> Address: 61
+Label: done       -> Address: 65
+Label: var_swapped -> Address: 66
+Label: var_ptr    -> Address: 67
+Label: var_count  -> Address: 68
+Label: val1       -> Address: 69
+Label: val2       -> Address: 70
+Label: N          -> Address: 71
+Label: array      -> Address: 72
+Starting pass 2....
+Assembly complete. Generated bubble_sort.obj and bubble_sort.lst
+Successfully loaded 78 instruction words into memory.
+Starting execution...
+
+--- Execution Halted ---
+Final CPU State:
+A:  00000000 (0)
+B:  00000000 (0)
+PC: 00000042 (66)
+SP: 00001FFF (8191)
+Writing complete memory dump to 'bubble_sort_dump.lst'...
+Memory dump saved successfully!

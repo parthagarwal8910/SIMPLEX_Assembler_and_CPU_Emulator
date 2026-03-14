@@ -1,0 +1,17 @@
+Starting Pass 1...
+ERROR at PC 0000: Duplicate label definition 'label'
+ERROR at PC 0005: Invalid label name '0def' (must start with a letter)
+Instruction Not found
+Instruction Not found
+Pass 1 complete. Found 1 labels.
+Label: label      -> Address: 0
+Starting pass 2....
+ERROR at PC 0000: No such label 'nonesuch'
+ERROR at PC 0001: Invalid number format '08ge'
+ERROR at PC 0002: Missing operand for ldc
+ERROR at PC 0003: Unexpected operand '5' for add
+ERROR at PC 0004: Invalid number format '5,'
+ERROR at PC 0004: Extra text '6' at end of line
+ERROR at PC 0005: Unknown instruction 'fibble'
+ERROR at PC 0005: Unknown instruction '0def'
+Assembly complete. Generated test2.obj and test2.lst

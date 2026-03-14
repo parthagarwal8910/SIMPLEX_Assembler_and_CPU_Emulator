@@ -1,0 +1,45 @@
+Student Name: Parth Agarwal
+Roll Number- 2401CS89
+
+
+--- PROJECT CLAIMS ---
+
+1. GENERAL MARKS & CODE QUALITY (COMPLETED)
+Source files include name, ID, and declaration.
+Code compiles silently with ZERO warnings using strict C89 flags: 
+      'gcc -std=c89 -pedantic -W -Wall -Wpointer-arith -Wwrite-strings -Wstrict-prototypes'
+Sensible variable names, clear formatting, and explanatory comments included.
+No memory leaks; safe string manipulation used throughout.
+
+2. ADVANCED ASSEMBLER (COMPLETED)
+Implements a two-pass assembler architecture.
+Generates pure binary object files (.obj) and formatted listing files (.lst).
+Robust String Parsing: Aggressively trims leading/trailing whitespaces and safely handles labels even if there is no space after the colon (e.g., 'label:adj').
+Relative Addressing: Accurately calculates 2's complement branch offsets for brz, brlz, br, and call.
+Pseudo-instructions: Fully implements 'data' (memory allocation) and 'SET' (constant substitution) without taking up CPU memory space.
+Advanced Static Analysis (Warnings):
+      - "WARNING: label defined but not used" (Flags dead code/memory).
+      - "WARNING: Infinite loop detected" (Flags instructions branching to themselves).
+Aggressive Error Handling (Errors):
+      - Detects duplicate label definitions.
+      - Detects invalid label names (must start with a letter).
+      - Detects missing/unknown labels.
+      - Detects missing or unexpected operands.
+      - Detects unknown instruction mnemonics.
+      - Halts PC incrementation on invalid lines to prevent cascading memory corruption.
+
+3. VIRTUAL CPU EMULATOR (COMPLETED)
+Successfully loads .obj binary files into a virtual 8,192-word memory array.
+Implements a robust Fetch-Decode-Execute loop.
+Accurately simulates the CPU registers (A, B, PC, SP) and increments PC correctly.
+Math & Logic: Executes all standard arithmetic, memory offset (ldnl/stnl), and branching instructions.
+Call Stack & Recursion: Flawlessly handles Stack Pointer (SP) operations (adj, a2sp, call, return) allowing for deep recursive function calls.
+Output Generation: Produces a final CPU Register state printout upon HALT.
+Dynamic Memory Dumping: Automatically generates distinctly named memory dump text files (e.g., 'bubblesort_dump.lst') showing the exact final state of all RAM addresses.
+
+4. TEST CASES & LOGS (COMPLETED)
+Generated complete .log files combining Assembler and Emulator outputs.
+test01.log: Verified basic instruction and arithmetic execution.
+test2.log: Verified the Assembler's robust error catching and warning systems.
+bubblesort.log: Verified array pointers, memory offsets, and nested looping.
+triangle.log: Verified deep recursive math, generating the Fibonacci sequence via stack frames.

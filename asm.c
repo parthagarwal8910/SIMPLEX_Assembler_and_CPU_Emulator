@@ -61,6 +61,7 @@ typedef struct
 {
    char name[50];
    int address;
+   int is_used;
 }Symbol;
 
 Symbol symbol_table[MAX_LABELS];
@@ -144,6 +145,7 @@ int main(int argc,char* argv[])
         {
             strcpy(symbol_table[symbol_count].name,token);
             symbol_table[symbol_count].address=pc;
+            symbol_table[symbol_count].is_used = 0;
             symbol_count++;
         }
        }
@@ -166,8 +168,20 @@ int main(int argc,char* argv[])
             if(strcmp(token,InstructionTable[j].mnemonic)==0)
             {
             found=1;
-            if(strcmp(token,"SET")!=0)
-            pc++;
+            if(strcmp(token,"SET")==0)
+                {
+    
+                    char *set_operand = strtok(NULL, " \t\r\n");
+                    if (set_operand != NULL && symbol_count > 0) {
+                        symbol_table[symbol_count - 1].address = strtol(set_operand, NULL, 0);
+                    } else {
+                        printf("ERROR at PC %04X: Missing operand for SET\n", pc);
+                    }
+                }
+                else
+                {
+                    pc++; 
+                }
             break;
             }
         }
@@ -263,7 +277,12 @@ int main(int argc,char* argv[])
                             break;
                         }
                        operand_val=strtol(operand_str,&endptr,0);
-                       
+                       if (strcmp(token, "SET") == 0) {
+                        
+                        fprintf(lstfile, "         %08X %s\n", operand_val, line); 
+                        
+                        continue; 
+                       }
                        if(*endptr!='\0' && *endptr!=';')
                        {
                         if (isdigit(operand_str[0]) || (operand_str[0] == '-' && isdigit(operand_str[1]))) {
@@ -279,6 +298,13 @@ int main(int argc,char* argv[])
                             {
                                 operand_val=symbol_table[i].address;
                                 label_found=1;
+                                symbol_table[i].is_used=1;
+
+                                if (strcmp(InstructionTable[j].mnemonic, "br") == 0) {
+                                    if (operand_val == pc) {
+                                        printf("WARNING at PC %04X: Infinite loop detected (branch to itself)\n", pc);
+                                    }
+                                }
                                 break;
                             }
                         }
@@ -344,6 +370,11 @@ int main(int argc,char* argv[])
                 printf("ERROR at PC %04X: Unknown instruction '%s'\n", pc, token);
             }
         }
+        for (i = 0; i < symbol_count; i++) {
+        if (symbol_table[i].is_used == 0) {
+            printf("WARNING: label '%s' defined but not used\n", symbol_table[i].name);
+        }
+    }
     fclose(infile);
     fclose(objfile);
     fclose(lstfile);
