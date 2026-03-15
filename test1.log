@@ -1,0 +1,10 @@
+Starting Pass 1...
+Pass 1 complete. Found 4 labels.
+Label: label      -> Address: 0
+Label: loop       -> Address: 3
+Label: next       -> Address: 5
+Label: var1       -> Address: 7
+Starting pass 2....
+WARNING at PC 0003: Infinite loop detected (branch to itself)
+WARNING: label 'label' defined but not used
+Assembly complete. Generated test1.obj and test1.lst

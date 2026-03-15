@@ -1,6 +1,6 @@
-Student Name: Parth Agarwal
-Roll Number- 2401CS89
-
+Name: Parth Agarwal
+Roll Number: 2401CS89
+Declaration: I declare that this is my own original work.
 
 --- PROJECT CLAIMS ---
 
@@ -14,7 +14,7 @@ No memory leaks; safe string manipulation used throughout.
 2. ADVANCED ASSEMBLER (COMPLETED)
 Implements a two-pass assembler architecture.
 Generates pure binary object files (.obj) and formatted listing files (.lst).
-Robust String Parsing: Aggressively trims leading/trailing whitespaces and safely handles labels even if there is no space after the colon (e.g., 'label:adj').
+Robust String Parsing: Aggressively trims leading/trailing whitespaces and safely handles labels even if there is no space after the colon.
 Relative Addressing: Accurately calculates 2's complement branch offsets for brz, brlz, br, and call.
 Pseudo-instructions: Fully implements 'data' (memory allocation) and 'SET' (constant substitution) without taking up CPU memory space.
 Advanced Static Analysis (Warnings):
@@ -32,14 +32,16 @@ Aggressive Error Handling (Errors):
 Successfully loads .obj binary files into a virtual 8,192-word memory array.
 Implements a robust Fetch-Decode-Execute loop.
 Accurately simulates the CPU registers (A, B, PC, SP) and increments PC correctly.
+Safety Parachute: Implements a memory boundary check to safely auto-halt the CPU and prevent Segmentation Faults if the PC runs past the end of allocated memory.
 Math & Logic: Executes all standard arithmetic, memory offset (ldnl/stnl), and branching instructions.
 Call Stack & Recursion: Flawlessly handles Stack Pointer (SP) operations (adj, a2sp, call, return) allowing for deep recursive function calls.
 Output Generation: Produces a final CPU Register state printout upon HALT.
-Dynamic Memory Dumping: Automatically generates distinctly named memory dump text files (e.g., 'bubblesort_dump.lst') showing the exact final state of all RAM addresses.
+Dynamic Memory Dumping: Automatically generates distinctly named memory dump text files showing the exact final state of all RAM addresses.
 
 4. TEST CASES & LOGS (COMPLETED)
 Generated complete .log files combining Assembler and Emulator outputs.
-test01.log: Verified basic instruction and arithmetic execution.
-test2.log: Verified the Assembler's robust error catching and warning systems.
-bubblesort.log: Verified array pointers, memory offsets, and nested looping.
-triangle.log: Verified deep recursive math, generating the Fibonacci sequence via stack frames.
+test1.log: Verified basic instruction parsing, forward referencing, and static analysis warnings (unused label, infinite loop).
+test2.log: Verified the Assembler's robust error catching (duplicate labels, bogus mnemonics, missing operands) by rejecting invalid code.
+test3.log: Verified the implementation of the 'SET' pseudo-instruction and successful forward referencing of constant values.
+test4.log: Verified deep recursive math, successfully generating the 10th row of Pascal's Triangle (binomial coefficients) via complex stack frames.
+bubble_sort.log: Verified dynamic array pointers, memory offsets (ldnl/stnl), and nested looping to successfully execute a multi-pass sorting algorithm.

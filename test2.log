@@ -14,4 +14,18 @@ ERROR at PC 0004: Invalid number format '5,'
 ERROR at PC 0004: Extra text '6' at end of line
 ERROR at PC 0005: Unknown instruction 'fibble'
 ERROR at PC 0005: Unknown instruction '0def'
+WARNING: label 'label' defined but not used
 Assembly complete. Generated test2.obj and test2.lst
+Successfully loaded 4 instruction words into memory.
+Starting execution...
+
+[EMULATOR WARNING] PC out of bounds (2000). Auto-halting to prevent crash!
+
+--- Execution Halted ---
+Final CPU State:
+A:  00000000 (0)
+B:  00000000 (0)
+PC: 00002000 (8192)
+SP: 00001FFF (8191)
+Writing complete memory dump to 'test2_dump.lst'...
+Memory dump saved successfully!

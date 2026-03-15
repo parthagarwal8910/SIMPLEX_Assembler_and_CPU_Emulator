@@ -1,0 +1,19 @@
+Starting Pass 1...
+Pass 1 complete. Found 2 labels.
+Label: val        -> Address: 75
+Label: val2       -> Address: 66
+Starting pass 2....
+Assembly complete. Generated test3.obj and test3.lst
+Successfully loaded 2 instruction words into memory.
+Starting execution...
+
+[EMULATOR WARNING] PC out of bounds (2000). Auto-halting to prevent crash!
+
+--- Execution Halted ---
+Final CPU State:
+A:  00000000 (0)
+B:  00000000 (0)
+PC: 00002000 (8192)
+SP: 00001FFF (8191)
+Writing complete memory dump to 'test3_dump.lst'...
+Memory dump saved successfully!

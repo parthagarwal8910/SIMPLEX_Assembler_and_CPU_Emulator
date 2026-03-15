@@ -14,6 +14,7 @@ Label: val2       -> Address: 70
 Label: N          -> Address: 71
 Label: array      -> Address: 72
 Starting pass 2....
+WARNING: label 'init' defined but not used
 Assembly complete. Generated bubble_sort.obj and bubble_sort.lst
 Successfully loaded 78 instruction words into memory.
 Starting execution...

@@ -8,7 +8,7 @@ Label: one        -> Address: 70
 Label: count      -> Address: 74
 Label: result     -> Address: 75
 Starting pass 2....
-Assembly complete. Generated triangle.obj and triangle.lst
+Assembly complete. Generated test4.obj and test4.lst
 Successfully loaded 76 instruction words into memory.
 Starting execution...
 
@@ -18,5 +18,5 @@ A:  00000000 (0)
 B:  00000000 (0)
 PC: 0000000A (10)
 SP: 00001000 (4096)
-Writing complete memory dump to 'triangle_dump.lst'...
+Writing complete memory dump to 'test4_dump.lst'...
 Memory dump saved successfully!

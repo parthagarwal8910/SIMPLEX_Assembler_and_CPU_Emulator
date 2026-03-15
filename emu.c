@@ -43,6 +43,10 @@ int main(int argc,char* argv[])
 
     while(running)
     {
+        if (PC < 0 || PC >= MEMORY_SIZE) {
+            printf("\n[EMULATOR WARNING] PC out of bounds (%04X). Auto-halting to prevent crash!\n", PC);
+            break; 
+        }
         instruction=memory[PC];
 
         opcode=instruction & 0xFF;
